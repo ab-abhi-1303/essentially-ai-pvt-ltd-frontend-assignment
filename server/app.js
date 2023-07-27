@@ -31,7 +31,8 @@ app.post('/api/fetchStockData', async (req, res) => {
     try {
         const stockSymbol = req.body.stockSymbol;
         const date = req.body.date;
-        const response = await axios.get(`https://api.polygon.io/v1/open-close/${stockSymbol}/${date}?adjusted=true&apiKey=vdCJkYhsvCWjyIAIdgsPXqwJGDW1o6py`);
+        const defaultKey = 'vdCJkYhsvCWjyIAIdgsPXqwJGDW1o6py';
+        const response = await axios.get(`https://api.polygon.io/v1/open-close/${stockSymbol}/${date}?adjusted=true&apiKey=${defaultKey}`);
         if (response.status === 200) {
             const { open, close, high, low, volume } = response.data;
             res.status(200).json({ open, close, high, low, volume });
@@ -43,12 +44,12 @@ app.post('/api/fetchStockData', async (req, res) => {
         if (error.response) {
             const statusCode = error.response.status;
             console.log('Error status code:', statusCode);
-            if (statusCode === 404) {  //for Incorrect Symbol
+            if (statusCode === 404) { 
                 console.log('Resource not found.');
                 res.sendStatus(404);
                 return;
             }
-            else if (statusCode === 403) { //for Incorrect Date
+            else if (statusCode === 403) { 
                 console.log('Forbidden.');
                 res.sendStatus(403);
                 return;

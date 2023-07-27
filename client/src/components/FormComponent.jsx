@@ -18,6 +18,7 @@ const FormComponent = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setStockDetails(null);
     const apiUrl = "http://localhost:5000/api/fetchStockData";
     const dataToSend = {
       stockSymbol: formData.stockSymbol.toUpperCase(),
@@ -33,18 +34,15 @@ const FormComponent = () => {
         },
       });
       if (!response.ok) {
-        setStockDetails(null);
-        throw new Error("Unable to load response, Please try with different input.");
-      }
-      else if(response.ok) {
+        throw new Error(
+          "Unable to load response, Please try with different input."
+        );
+      } else if (response.ok) {
         const responseData = await response.json();
         setStockDetails(responseData);
       }
-    } 
-    catch (error) {
-      setStockDetails(null);
+    } catch (error) {
       console.error("API error:", error);
-      console.log("STOCK DETAILS:", stockDetails);
       alert(error.message);
     }
   };
@@ -88,7 +86,6 @@ const FormComponent = () => {
           Submit
         </button>
       </form>
-
       {stockDetails && (
         <div className="stock-data">
           <h3>API Data:</h3>
